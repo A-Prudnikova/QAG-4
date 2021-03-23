@@ -1,18 +1,21 @@
 package pageobjects.scenarios;
 
+import com.github.javafaker.Faker;
+
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selenide.*;
+
 
 public class RegFormPage {
+    Faker faker = new Faker();
 
-    String name = "Ana",
-            surname = "Yyy",
-            email = "Yyy@aaa.ru",
-            phone = "1234567890",
+    String name = faker.name().firstName(),
+            surname = faker.name().lastName(),
+            email = faker.internet().emailAddress(),
+            phone = faker.number().digits(10),
             subject = "English",
-            address = "Street N build.123",
+            address = faker.address().streetAddress(),
             state = "NCR",
             city = "Delhi";
 
@@ -20,30 +23,46 @@ public class RegFormPage {
         open("https://demoqa.com/automation-practice-form");
         $(".practice-form-wrapper").shouldHave(text("Student Registration Form"));
     }
+
     public void fillData() {
-        $("#firstName").setValue(name);
-        $("#lastName").setValue(surname);
-        $("#userEmail").setValue(email);
+        $("#firstName").val(name);
+        $("#lastName").val(surname);
+        $("#userEmail").val(email);
         $(byText("Male")).click();
         $(byText("Female")).click();
         $(byText("Other")).click();
-        $("#userNumber").setValue(phone);
+        $("#userNumber").val(phone);
         $("#dateOfBirthInput").click();
         $(".react-datepicker__month-select").selectOptionByValue("0");
         $(".react-datepicker__year-select").selectOptionByValue("1910");
         $(".react-datepicker__day--003").click();
-        $("#subjectsInput").setValue(subject).pressEnter();
+        $("#subjectsInput").val(subject).pressEnter();
         $(byText("Sports")).click();
         $(byText("Reading")).click();
         $(byText("Music")).click();
         $("#uploadPicture").uploadFromClasspath("ava.jpg");
-        $("#currentAddress").setValue(address);
-        $("#react-select-3-input").setValue(state).pressEnter();
-        $("#react-select-4-input").setValue(city).pressEnter();
+        $("#currentAddress").val(address);
+        $("#react-select-3-input").val(state).pressEnter();
+        $("#react-select-4-input").val(city).pressEnter();
         $("#submit").click();
+        $("#example-modal-sizes-title-lg").shouldHave(text("Thanks for submitting the form"));
 
     }
-    public void checkData() {
 
+    public void checkData() {
+        $(".modal-content").shouldHave(
+                text(name),
+                text(surname),
+                text(email),
+                text("Other"),
+                text(phone),
+                text("03 January,1910"),
+                text(subject),
+                text("Sports, Reading, Music"),
+                text("ava.jpg"),
+                text(address),
+                text(state),
+                text(city)
+        );
     }
 }

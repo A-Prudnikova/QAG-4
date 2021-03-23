@@ -1,17 +1,24 @@
 package pageobjects.scenarios;
 
+import com.codeborne.selenide.Configuration;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selenide.*;
 public class RegFormTests {
     RegFormPage regFormPage = new RegFormPage();
 
+    @BeforeAll
+    static void setup() {
+        Configuration.startMaximized = true;
+
+    }
+
     @Test
     void successfulFillTest() {
-        RegFormPage.openPage();
-        RegFormPage.fillData();
-        RegFormPage.checkData();
+        regFormPage.openPage();
+        regFormPage.fillData();
+        regFormPage.checkData();
+
+
     }
 }
